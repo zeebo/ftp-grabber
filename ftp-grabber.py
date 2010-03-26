@@ -17,19 +17,27 @@ class FtpGrabber(LineReceiver):
     if len(chunks) > 0 and hasattr(self, "handle_%s" % chunks[0].lower()):
       function = getattr(self, "handle_%s" % chunks[0].lower())
       if callable(function):
+        #function returns success
         invalid_command = not function(line)
     
     if invalid_command:
       self.transport.loseConnection()
   
   def handle_user(self, line):
+    #Usernames may contain spaces, so dont use split
+    #Defer printing to when password is sent to not mix concurrent connections
+    self.username = line[5:]
+    
+    #331 means authorization required
     self.transport.write("331 BRO NEED DAT PASS\n")
     
     #Continue connection
     return True
   
   def handle_pass(self, line):
-    print line
+    #Password may contain spaces, so dont use split
+    print "Username: %s" % self.username
+    print "Password: %s" % line[5:]
     
     #Lose connecion
     return False
@@ -40,6 +48,7 @@ if __name__ == "__main__":
                                     type='int',
                                     help='Port to bind to',
                                     default=9001) #It's over 9000!
+  
   options, args = parser.parse_args()
   
   factory = Factory()
