@@ -1,0 +1,10 @@
+ftp-grabber is a simple python script using twisted that implements the
+protocol for a basic ftp server. It waits for connections on the specified port
+with the default being 9001, and prints passwords of connections authenticating
+to the server.
+
+Usage: ftp-grabber.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -p PORT, --port=PORT  Port to bind to
