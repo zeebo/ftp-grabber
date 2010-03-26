@@ -14,21 +14,21 @@ class FtpGrabber(LineReceiver):
     invalid_command = True
     
     #Check the chunks and see if the first word is something we can handle
-    if len(chunks) > 0 and hasattr(self, "handle_%s" % chunks[0]):
-      function = getattr(self, "handle_%s" % chunks[0])
+    if len(chunks) > 0 and hasattr(self, "handle_%s" % chunks[0].lower()):
+      function = getattr(self, "handle_%s" % chunks[0].lower())
       if callable(function):
         invalid_command = not function(line)
     
     if invalid_command:
       self.transport.loseConnection()
   
-  def handle_USER(self, line):
+  def handle_user(self, line):
     self.transport.write("331 BRO NEED DAT PASS\n")
     
     #Continue connection
     return True
   
-  def handle_PASS(self, line):
+  def handle_pass(self, line):
     print line
     
     #Lose connecion
